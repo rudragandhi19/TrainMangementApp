@@ -1,15 +1,16 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-// Reusing Bogie class
+// Extended Bogie class with category
 class Bogie {
     String name;
     int capacity;
+    String category;
 
-    public Bogie(String name, int capacity) {
+    public Bogie(String name, int capacity, String category) {
         this.name = name;
         this.capacity = capacity;
+        this.category = category;
     }
 
     @Override
@@ -24,25 +25,28 @@ public class TrainManagementApp {
 
         System.out.println("=== Train Consist Management App ===");
 
-        // Create list of bogies (same as UC7)
+        // Create list of bogies
         List<Bogie> bogies = new ArrayList<>();
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 78));
-        bogies.add(new Bogie("First Class", 24));
+        bogies.add(new Bogie("Sleeper", 72, "Passenger"));
+        bogies.add(new Bogie("AC Chair", 78, "Passenger"));
+        bogies.add(new Bogie("First Class", 24, "Passenger"));
+        bogies.add(new Bogie("Cargo", 100, "Goods"));
+        bogies.add(new Bogie("Parcel", 80, "Goods"));
 
-        // Display original list
-        System.out.println("\nAll Bogies:");
-        bogies.forEach(System.out::println);
+        // Group bogies by category
+        Map<String, List<Bogie>> groupedBogies = bogies.stream()
+                .collect(Collectors.groupingBy(b -> b.category));
 
-        // Stream filtering: capacity > 60
-        List<Bogie> filteredBogies = bogies.stream()
-                .filter(b -> b.capacity > 60)
-                .collect(Collectors.toList());
+        // Display grouped result
+        System.out.println("\nGrouped Bogies:");
 
-        // Display filtered bogies
-        System.out.println("\nFiltered Bogies (Capacity > 60):");
-        filteredBogies.forEach(System.out::println);
+        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
+            System.out.println("\nCategory: " + entry.getKey());
+            for (Bogie b : entry.getValue()) {
+                System.out.println("  " + b);
+            }
+        }
 
-        System.out.println("\nFiltering completed successfully.");
+        System.out.println("\nGrouping completed successfully.");
     }
 }
